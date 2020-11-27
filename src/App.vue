@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 14:13:36
- * @LastEditTime: 2020-11-27 16:07:46
+ * @LastEditTime: 2020-11-27 20:30:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\App.vue
@@ -10,7 +10,7 @@
   <div id="app">
     <Header></Header>
     <router-view></router-view>
-    <Footer></Footer>
+    <Footer v-if="!$route.meta.isHideFooter"></Footer>
   </div>
 </template>
 
