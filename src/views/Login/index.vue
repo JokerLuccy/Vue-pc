@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:49
- * @LastEditTime: 2020-11-27 20:52:13
+ * @LastEditTime: 2020-11-28 15:22:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Login\index.vue
@@ -45,7 +45,9 @@
               <button class="btn" @click="login">登录</button>
             </form>
             <div>
-              <a href="###" class="register">立即注册</a>
+              <router-link to="/register">
+                <a href="###" class="register">立即注册</a>
+              </router-link>
             </div>
           </div>
         </div>
@@ -56,8 +58,8 @@
 </template>
 
 <script>
-import CopyRight from "../../components/Footer/copyRight";
-import { reqLogin } from "../../api";
+import CopyRight from "@comps/Footer/copyRight";
+import { reqLogin } from "@api/";
 export default {
   name: "Login",
   data() {
@@ -67,11 +69,15 @@ export default {
     };
   },
   methods: {
+    /**
+     * @description:登录请求
+     * @param {*}
+     * @return {*}
+     */
     async login() {
       const { phone, password } = this;
-      const result = await reqLogin(phone, password);
-      console.log(result);
-      console.log(1);
+      const res = await reqLogin(phone, password);
+      console.log(res);
     },
   },
   components: {

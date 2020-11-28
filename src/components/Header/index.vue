@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-11-27 18:22:44
+ * @LastEditTime: 2020-11-28 11:40:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -15,10 +15,10 @@
           <span>
             尚品汇欢迎您! 请
             <router-link to="/login">
-              <a href="###">登录</a>
+              <a href="###">{{ name ? name : "登录" }}</a>
             </router-link>
             <router-link to="/register">
-              <a href="###">免费注册</a>
+              <a href="###">{{ name ? "退出" : "免费注册" }}</a>
             </router-link>
           </span>
         </div>
@@ -42,8 +42,8 @@
       </h1>
       <div class="header-bottom-searchArea">
         <form>
-          <input type="text" />
-          <button>搜索</button>
+          <input type="text" v-model="searchContent" />
+          <button type="button" @click="search">搜索</button>
         </form>
       </div>
     </div>
@@ -53,6 +53,31 @@
 <script>
 export default {
   name: "Header",
+  data() {
+    return {
+      name: "",
+      searchContent: "",
+    };
+  },
+  mounted() {
+    this.$bus.$on("user", (name) => {
+      console.log(name);
+      this.name = name;
+    });
+  },
+  methods: {
+    /**
+     * @description: 搜索功能
+     * @param {*}
+     * @return {*}
+     */
+    search() {
+      const { $router, searchContent } = this,
+        params = searchContent ? `/${searchContent}` : "",
+        location = "/search" + params;
+      $router.push(location);
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

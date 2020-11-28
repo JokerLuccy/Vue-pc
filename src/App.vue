@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 14:13:36
- * @LastEditTime: 2020-11-27 20:30:30
+ * @LastEditTime: 2020-11-28 15:19:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\App.vue
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "@comps/Header";
+import Footer from "@comps/Footer";
 export default {
   name: "App",
   components: {
