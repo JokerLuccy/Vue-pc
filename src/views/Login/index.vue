@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:49
- * @LastEditTime: 2020-11-28 15:22:04
+ * @LastEditTime: 2020-11-28 16:11:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Login\index.vue
@@ -74,10 +74,10 @@ export default {
      * @param {*}
      * @return {*}
      */
-    async login() {
+    login() {
       const { phone, password } = this;
-      const res = await reqLogin(phone, password);
-      console.log(res);
+      const res = reqLogin(phone, password);
+      res.then(() => {}).catch(() => {});
     },
   },
   components: {
