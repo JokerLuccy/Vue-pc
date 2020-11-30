@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-11-30 08:48:43
+ * @LastEditTime: 2020-11-30 15:11:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -38,7 +38,7 @@
     <!-- header Second line -->
     <div class="header-bottom">
       <h1 class="header-bottom-logoArea">
-        <img src="./images/logo.png" alt="logo" />
+        <img src="./images/logo.png" alt="logo" @click="$router.push('/')" />
       </h1>
       <div class="header-bottom-searchArea">
         <form>
@@ -72,9 +72,20 @@ export default {
      * @return {*}
      */
     search() {
-      const { $router, searchContent } = this,
-        params = searchContent ? `/${searchContent}` : "",
-        location = "/search" + params;
+      const { $router, searchContent } = this;
+      const location = {
+        // 跳转到search路由中
+        name: "search",
+      };
+      if (searchContent) {
+        location.params = {
+          searchContent,
+        };
+      }
+      const { categoryName } = this.$route.query;
+      if (categoryName) {
+        location.query = this.$route.query;
+      }
       $router.push(location);
     },
   },
