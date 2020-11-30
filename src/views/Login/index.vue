@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:49
- * @LastEditTime: 2020-11-28 16:11:13
+ * @LastEditTime: 2020-11-28 18:47:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Login\index.vue
@@ -59,7 +59,7 @@
 
 <script>
 import CopyRight from "@comps/Footer/copyRight";
-import { reqLogin } from "@api/";
+import { reqLogin } from "@api/user";
 export default {
   name: "Login",
   data() {

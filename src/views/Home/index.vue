@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-28 12:34:14
- * @LastEditTime: 2020-11-28 12:35:01
+ * @LastEditTime: 2020-11-28 18:48:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Home\index.vue
@@ -33,7 +33,7 @@ import Like from "./Like/Like";
 import ListContainer from "./ListContainer/ListContainer";
 import Rank from "./Rank/Rank";
 import TodayRecommend from "./TodayRecommend/TodayRecommend";
-import TypeNav from "./TypeNav";
+import TypeNav from "@comps/TypeNav";
 export default {
   name: "Home",
   components: {

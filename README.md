@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-11-27 14:13:45
+ * @LastEditTime: 2020-11-28 16:25:41
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue_reception\README.md
+-->
 ### day02
 1.封装axios拦截器
     1.设置公共的请求地址前缀
@@ -11,4 +19,27 @@
         header:{} // 公共的头部文件
     })
     2.设置请求拦截器
-        instance.interceptores.request.use(()=>{})
+        instance.interceptores.request.use((config)=>{
+            // config 请求的配置对象
+            // 将来发送请求(请求地址,请求参数,请求方式等) 都会在config中找
+            // 修改config ,用来添加公共的请求参数
+                
+            return config
+            
+            })
+    3.设置响应拦截器
+        instance.interceptors.response.use({
+            (response) => {
+                // response的数据结构
+                    {
+                        headers:{},
+                        status:{},
+                        request:{},
+                        data:{} // 响应的数据
+                    }
+            }
+            (error) => {
+                return Promise.reject()
+            }
+        })
+        
