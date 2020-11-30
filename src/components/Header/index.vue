@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-11-28 11:40:41
+ * @LastEditTime: 2020-11-30 08:48:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -124,6 +124,7 @@ export default {
       box-sizing: border-box;
       width: 490px;
       height: 32px;
+      margin-top: 15px;
       padding: 0px 4px;
       border: 2px solid #ea4a36;
       float: left;
@@ -131,6 +132,7 @@ export default {
     button {
       height: 32px;
       width: 68px;
+      margin-top: 15px;
       background-color: #ea4a36;
       border: none;
       color: #fff;

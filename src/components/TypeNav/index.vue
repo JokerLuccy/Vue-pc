@@ -14,7 +14,7 @@
         <a href="###">秒杀</a>
       </nav>
       <div class="sort">
-        <div class="all-sort-list2">
+        <div class="all-sort-list2" @click.prevent="goSearch">
           <div
             class="item bo"
             v-for="category in categoryList"
@@ -22,7 +22,12 @@
           >
             <h3>
               <!-- 一级列表 -->
-              <a href="">{{ category.categoryName }}</a>
+              <a
+                :data-categoryName="category.categoryName"
+                :data-categoryId="category.categoryId"
+                :data-categoryType="1"
+                >{{ category.categoryName }}</a
+              >
             </h3>
             <div class="item-list clearfix">
               <div
@@ -33,7 +38,12 @@
                 <dl class="fore">
                   <dt>
                     <!-- 二级列表 -->
-                    <a href="">{{ child.categoryName }}</a>
+                    <a
+                      :data-categoryName="child.categoryName"
+                      :data-categoryId="child.categoryId"
+                      :data-categoryType="2"
+                      >{{ child.categoryName }}</a
+                    >
                   </dt>
                   <dd>
                     <em
@@ -41,7 +51,12 @@
                       :key="grandChild.categoryId"
                     >
                       <!-- 三级列表 -->
-                      <a href="">{{ grandChild.categoryName }}</a>
+                      <a
+                        :data-categoryName="grandChild.categoryName"
+                        :data-categoryId="grandChild.categoryId"
+                        :data-categoryType="3"
+                        >{{ grandChild.categoryName }}</a
+                      >
                     </em>
                   </dd>
                 </dl>
@@ -55,17 +70,28 @@
 </template>
 
 <script>
-import { reqGetBaseCategoryList } from "@api/home";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "TypeNav",
-  data() {
-    return {
-      categoryList: [],
-    };
+  computed: {
+    ...mapState({
+      categoryList: (state) => state.home.categoryList,
+    }),
   },
-  async mounted() {
-    const result = await reqGetBaseCategoryList();
-    this.categoryList = result.slice(0, 15);
+  methods: {
+    ...mapActions(["getCategoryList"]),
+    goSearch(e) {
+      const { categoryid, categoryname, categorytype } = e.target.dataset;
+      const query = {
+        categoryName: categoryname,
+        [`category${categorytype}Id`]: categoryid,
+      };
+      if (!categoryname) return;
+      this.$router.push({ name: "/search", query });
+    },
+  },
+  mounted() {
+    this.getCategoryList();
   },
 };
 </script>
