@@ -3,10 +3,14 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" v-swiper:mySwiper="swiperOption">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
+            <div
+              class="swiper-slide"
+              v-for="banner in banners"
+              :key="banner.id"
+            >
+              <img :src="banner.imgUrl" />
             </div>
           </div>
           <!-- 如果需要分页器 -->
@@ -33,51 +37,51 @@
           </ul>
         </div>
         <ul class="lifeservices">
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">话费</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">机票</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">电影票</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">游戏</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">彩票</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">加油站</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">酒店</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">火车票</span>
           </li>
-          <li class=" life-item ">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">众筹</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">理财</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">礼品卡</span>
           </li>
-          <li class=" life-item">
+          <li class="life-item">
             <i class="list-item"></i>
             <span class="service-intro">白条</span>
           </li>
@@ -91,8 +95,33 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "ListContainer",
+  data() {
+    return {
+      swiperOption: {
+        pagination: ".swiper-pagination",
+        autoplay: 1000, // 可设置数值来指定播放速度
+        autoplayDisableOnInteraction: false, // 用户操作swiper之后，是否禁止autoplay
+        speed: 100, // 切换图片速度
+        loop: true, // 循环播放
+      },
+    };
+  },
+  computed: {
+    ...mapState({
+      banners: (state) => state.home.banners,
+    }),
+  },
+  methods: {
+    ...mapActions(["getBanners"]),
+  },
+  mounted() {
+    this.getBanners();
+
+    // this.mySwiper.slideTo(4, 1000, true);
+  },
 };
 </script>
 

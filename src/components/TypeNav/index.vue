@@ -1,12 +1,8 @@
 <template>
   <!-- 商品分类导航 -->
   <div class="type-nav">
-    <div
-      class="container"
-      @mouseenter="isNavShow = true"
-      @mouseleave="isNavShow = false"
-    >
-      <h2 class="all">全部商品分类</h2>
+    <div class="container" @mouseleave="isNavShow = false">
+      <h2 class="all" @mouseenter="isNavShow = true">全部商品分类</h2>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -19,7 +15,7 @@
       </nav>
       <transition name="search">
         <div class="sort" v-show="isHomeShow || isNavShow">
-          <div class="all-sort-list2" @click.prevent="goSearch">
+          <div class="all-sort-list2" @click="goSearch">
             <div
               class="item bo"
               v-for="category in categoryList"
@@ -69,6 +65,7 @@
               </div>
             </div>
           </div>
+          >
         </div>
       </transition>
     </div>
@@ -85,18 +82,22 @@ export default {
       isNavShow: false,
     };
   },
-
   computed: {
     ...mapState({
       categoryList: (state) => state.home.categoryList,
     }),
   },
   methods: {
-    ...mapActions(["getCategoryList"]),
+    ...mapActions(["getBaseCategoryList"]),
+    /**
+     * @description:地址栏设置
+     * @param {*} e 事件
+     * @return {*}
+     */
     goSearch(e) {
       const { categoryid, categoryname, categorytype } = e.target.dataset;
-      if (!categoryname) return;
 
+      if (!categoryname) return;
       const location = {
         name: "search",
         query: {
@@ -104,7 +105,6 @@ export default {
           [`category${categorytype}Id`]: categoryid,
         },
       };
-      this.isNavShow = false;
       const { searchContent } = this.$route.params;
       if (searchContent) {
         location.params = {
@@ -115,7 +115,8 @@ export default {
     },
   },
   mounted() {
-    this.getCategoryList();
+    if (this.categoryList.length) return;
+    this.getBaseCategoryList();
   },
 };
 </script>

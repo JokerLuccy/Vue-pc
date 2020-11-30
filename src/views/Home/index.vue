@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-28 12:34:14
- * @LastEditTime: 2020-11-28 18:48:56
+ * @LastEditTime: 2020-11-30 20:48:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Home\index.vue
@@ -18,9 +18,8 @@
     <!-- 猜你喜欢 -->
     <Like />
     <!--楼层-->
-    <Floor />
-    <!--楼层-->
-    <Floor />
+    <Floor v-for="floor in floors" :key="floor.id" :floor="floor" />
+
     <!--商标-->
     <Brand />
   </div>
@@ -34,8 +33,18 @@ import ListContainer from "./ListContainer/ListContainer";
 import Rank from "./Rank/Rank";
 import TodayRecommend from "./TodayRecommend/TodayRecommend";
 import TypeNav from "@comps/TypeNav";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "Home",
+  computed: {
+    ...mapState({
+      floors: (state) => state.home.floors,
+    }),
+  },
+  methods: { ...mapActions(["getFloors"]) },
+  mounted() {
+    this.getFloors();
+  },
   components: {
     Brand,
     Floor,

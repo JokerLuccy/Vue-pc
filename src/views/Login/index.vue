@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:49
- * @LastEditTime: 2020-11-28 18:47:29
+ * @LastEditTime: 2020-11-30 21:30:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Login\index.vue
@@ -38,9 +38,7 @@
                   <input type="checkbox" name="m1" />
                   自动登录
                 </label>
-                <span class="forget">
-                  忘记密码?
-                </span>
+                <span class="forget"> 忘记密码? </span>
               </div>
               <button class="btn" @click="login">登录</button>
             </form>
@@ -59,7 +57,7 @@
 
 <script>
 import CopyRight from "@comps/Footer/copyRight";
-import { reqLogin } from "@api/user";
+import { mapActions } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -74,11 +72,8 @@ export default {
      * @param {*}
      * @return {*}
      */
-    login() {
-      const { phone, password } = this;
-      const res = reqLogin(phone, password);
-      res.then(() => {}).catch(() => {});
-    },
+    ...mapActions([''])
+    login() {},
   },
   components: {
     CopyRight,

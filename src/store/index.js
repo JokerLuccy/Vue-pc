@@ -1,9 +1,9 @@
 /*
  * @Author: your name
- * @Date: 2020-11-30 10:08:33
- * @LastEditTime: 2020-11-30 10:40:05
+ * @Date: 2020-11-30 18:09:35
+ * @LastEditTime: 2020-11-30 18:11:37
  * @LastEditors: Please set LastEditors
- * @Description: Store的主文件
+ * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\store\index.js
  */
 import Vue from 'vue'

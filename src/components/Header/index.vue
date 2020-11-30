@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-11-30 15:11:12
+ * @LastEditTime: 2020-11-30 18:59:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -15,10 +15,10 @@
           <span>
             尚品汇欢迎您! 请
             <router-link to="/login">
-              <a href="###">{{ name ? name : "登录" }}</a>
+              <a href="###">登录</a>
             </router-link>
             <router-link to="/register">
-              <a href="###">{{ name ? "退出" : "免费注册" }}</a>
+              <a href="###"> 免费注册</a>
             </router-link>
           </span>
         </div>
@@ -55,28 +55,20 @@ export default {
   name: "Header",
   data() {
     return {
-      name: "",
       searchContent: "",
     };
   },
-  mounted() {
-    this.$bus.$on("user", (name) => {
-      console.log(name);
-      this.name = name;
-    });
-  },
   methods: {
     /**
-     * @description: 搜索功能
+     * @description: 搜索跳转
      * @param {*}
      * @return {*}
      */
     search() {
-      const { $router, searchContent } = this;
-      const location = {
-        // 跳转到search路由中
-        name: "search",
-      };
+      const { $router, searchContent } = this,
+        location = {
+          name: "search",
+        };
       if (searchContent) {
         location.params = {
           searchContent,

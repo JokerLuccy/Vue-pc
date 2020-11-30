@@ -1,13 +1,12 @@
 /*
  * @Author: your name
- * @Date: 2020-11-30 10:11:07
- * @LastEditTime: 2020-11-30 10:39:46
+ * @Date: 2020-11-30 18:12:17
+ * @LastEditTime: 2020-11-30 21:23:49
  * @LastEditors: Please set LastEditors
- * @Description: Modules的主文件
+ * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\store\modules\index.js
  */
 import home from './home'
-const modules = {
-    home
-}
+import login from './login'
+const modules = { home, login }
 export default modules
