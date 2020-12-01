@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:49
- * @LastEditTime: 2020-11-30 21:30:11
+ * @LastEditTime: 2020-11-30 23:37:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Login\index.vue
@@ -40,7 +40,7 @@
                 </label>
                 <span class="forget"> 忘记密码? </span>
               </div>
-              <button class="btn" @click="login">登录</button>
+              <button class="btn" type="button" @click="login">登录</button>
             </form>
             <div>
               <router-link to="/register">
@@ -57,6 +57,7 @@
 
 <script>
 import CopyRight from "@comps/Footer/copyRight";
+
 import { mapActions } from "vuex";
 export default {
   name: "Login",
@@ -66,14 +67,22 @@ export default {
       password: "",
     };
   },
+
   methods: {
     /**
      * @description:登录请求
      * @param {*}
      * @return {*}
      */
-    ...mapActions([''])
-    login() {},
+    ...mapActions(["userLogin"]),
+    login() {
+      const data = {
+        phone: this.phone,
+        password: this.password,
+      };
+      this.userLogin(data);
+      this.$router.push("/");
+    },
   },
   components: {
     CopyRight,

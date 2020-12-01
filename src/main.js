@@ -1,27 +1,29 @@
 /*
  * @Author: your name
  * @Date: 2020-11-27 14:13:36
- * @LastEditTime: 2020-11-30 19:49:13
+ * @LastEditTime: 2020-12-01 20:58:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\main.js
  */
 import Vue from "vue";
-import VueAwesomeSwiper from 'vue-awesome-swiper'
+import VueAwesomeSwiper from "vue-awesome-swiper";
+import "@utils/validate";
+
 import App from "./App.vue";
 import router from "./router";
-import store from './store'
+import store from "./store";
 import "./styles/reset.css";
-import './plugins/element.js'
-import './mock/mockServer'
-import 'swiper/swiper-bundle.css'
+import "./plugins/element.js";
+import "./mock/mockServer";
 Vue.config.productionTip = false;
-Vue.use(VueAwesomeSwiper)
+Vue.use(VueAwesomeSwiper);
+
 new Vue({
   beforeCreate() {
     Vue.prototype.$bus = this;
   },
   render: (h) => h(App),
   router,
-  store
+  store,
 }).$mount("#app");

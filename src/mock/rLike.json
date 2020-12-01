@@ -1,0 +1,8 @@
+[
+    {
+        "id|+1":1,
+        "imgUrl":"@image('240x250',@color)",
+        "descripet":"@ctitle(2,15)",
+        "price|1-100":100
+    }
+]

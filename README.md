@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 14:13:45
- * @LastEditTime: 2020-11-30 11:50:11
+ * @LastEditTime: 2020-12-01 18:25:04
  * @LastEditors: Please set LastEditors
  * @Description: 笔记,重要内容
  * @FilePath: \vue_reception\README.md
@@ -67,3 +67,23 @@
     2.路由跳转的两种方法
         -使用router-link跳转，问题是产生太多的组件，如果页面需要跳转的数据过多，页面性能就会收到影响
         -使用编程式导航跳转，不会产生多个组件，看情况使用
+    3.优化事件处理效率：利用时间委托
+        利用事件委托，绑定一个点击监听来搞定所有分类项的点击相应
+    4.利用标签自定义属性携带动态数据
+        获取自定义属性的value e.target.dataset
+### day04
+    1.轮播图知识点
+        -在mounted中 new Swiper,为了保证DOM结构生成在以后在new,确保可以找到DOM元素
+        -如果在mounted直接new Swiper ,这时候还没有回去到轮播图所用到的数据,会出现报错,一定要等到轮播图的数据请求回来,在new Swiper
+        -await this.getBanners()-->等待vuex将轮播图数据更新完毕,在执行后面的new Swiper
+        -更新用户界面都是异步的,所以要等同步全部执行完,再去更新
+            解决方式1 定时器
+                通过定时器将new Swiper添加宏任务队列,更新用户界面是微任务队列,所以先更新用户界面,目的是获取DOM元素,再new Swiper,
+            解决方式2 nextTick()
+                this.$nextTick(()=>{})
+                Vue.$nextTick(()=>{})
+                    当用户界面更新完毕,在触发其中的回调函数
+                    将其中的回调函数放到更新完成DOM后在触发
+                    其中的回调函数类似于在updated中执行(但是只会执行一次)
+        -在swiper-container 最外层定义 ref='swiper'
+            这样可以保证轮播图组件使用的都是自己的swiper

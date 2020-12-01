@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-11-30 18:59:54
+ * @LastEditTime: 2020-12-01 19:26:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -12,7 +12,15 @@
     <div class="header-top">
       <div class="header-container">
         <div class="header-login">
-          <span>
+          <span v-if="userInfo.token">
+            尚品汇欢迎您! 请
+
+            <span>{{ userInfo.name }}</span>
+
+            <a href="###" @click="loginOut">退出</a>
+          </span>
+
+          <span v-else>
             尚品汇欢迎您! 请
             <router-link to="/login">
               <a href="###">登录</a>
@@ -51,6 +59,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
   name: "Header",
   data() {
@@ -58,7 +68,13 @@ export default {
       searchContent: "",
     };
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.login.userInfo,
+    }),
+  },
   methods: {
+    ...mapActions(["userLoginOut"]),
     /**
      * @description: 搜索跳转
      * @param {*}
@@ -79,6 +95,17 @@ export default {
         location.query = this.$route.query;
       }
       $router.push(location);
+    },
+    /**
+     * @description：退出登录
+     * @param {*}
+     * @return {*}
+     */
+    loginOut() {
+      if (confirm("确定要退出？")) {
+        this.userLoginOut();
+        this.$router.push("/login");
+      }
     },
   },
 };

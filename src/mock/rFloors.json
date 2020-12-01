@@ -9,7 +9,7 @@
           "text": "@ctitle(2,4)"
         }
       ],
-      "imgUrl": "@image()",
+      "imgUrl": "@image('240x250')",
       "navList|6-10": [
         {
           "id|+1": 1,
@@ -20,7 +20,7 @@
       "carouselList|3": [
         {
           "id|+1": 1,
-          "imgUrl": "@image('200x200', '@color')"
+          "imgUrl": "@image('330x360', '@color')"
         }
       ],
       "recommendList|2": [{
@@ -28,7 +28,7 @@
         "url": "#",
         "imgUrl": "@image('200x200', '@color')"
       }],
-      "bigImg": "@image('200x200', '@color')"
+      "bigImg": "@image('240x360', '@color')"
     }
   ]
   
