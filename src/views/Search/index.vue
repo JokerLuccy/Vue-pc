@@ -11,38 +11,92 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li
+              class="with-x"
+              v-show="options.keyword"
+              @click="delSearchContent"
+            >
+              关键字： {{ options.keyword }}<i>×</i>
+            </li>
+            <li
+              class="with-x"
+              v-show="options.categoryName"
+              @click="delCategoryName"
+            >
+              分类： {{ options.categoryName }}<i>×</i>
+            </li>
+            <li class="with-x" v-show="options.trademark" @click="delTradeMark">
+              品牌： {{ options.trademark.split(":")[1] }}<i>×</i>
+            </li>
+            <li
+              class="with-x"
+              v-for="(prop, index) in options.props"
+              :key="prop"
+              @click="delProps(index)"
+            >
+              {{ prop.split(":")[2] }}： {{ prop.split(":")[1] }}<i>×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector :addTradeMark="addTradeMark" @add-prop="addProp" />
 
         <!--details-->
+
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li
+                  :class="{ active: options.order.startsWith('1') }"
+                  @click="setOrder('1')"
+                >
+                  <a
+                    >综合
+                    <i
+                      :class="{
+                        iconfont: true,
+                        'icon-direction-down': isAllDown,
+                        'icon-direction-up': !isAllDown,
+                      }"
+                    ></i>
+                  </a>
                 </li>
                 <li>
-                  <a href="#">销量</a>
+                  <a>销量</a>
                 </li>
                 <li>
-                  <a href="#">新品</a>
+                  <a>新品</a>
                 </li>
                 <li>
-                  <a href="#">评价</a>
+                  <a>评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li
+                  :class="{ active: options.order.startsWith('2') }"
+                  @click="setOrder('2')"
+                >
+                  <a
+                    >价格
+                    <span>
+                      <i
+                        :class="{
+                          iconfont: true,
+                          'icon-arrow-up-filling': true,
+                          deactive:
+                            options.order.startsWith('2') && isPriceDown,
+                        }"
+                      ></i>
+                      <i
+                        :class="{
+                          iconfont: true,
+                          'icon-arrow-down-filling': true,
+                          deactive:
+                            options.order.startsWith('2') && !isPriceDown,
+                        }"
+                      ></i>
+                    </span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -76,9 +130,9 @@
                   </div>
                   <div class="operate">
                     <a
-                      href="success-cart.html"
                       target="_blank"
                       class="sui-btn btn-bordered btn-danger"
+                      @click="addToCart(goods)"
                       >加入购物车</a
                     >
                     <a href="javascript:void(0);" class="sui-btn btn-bordered"
@@ -89,8 +143,8 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
+
+          <!-- <div class="sui-pagination clearfix">
               <ul>
                 <li class="prev disabled">
                   <a href="#">«上一页</a>
@@ -116,8 +170,20 @@
                 </li>
               </ul>
               <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+            </div> -->
+          <!-- pagination -->
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="options.pageNo"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="15"
+            :page-count="7"
+            background
+            layout="prev,pager,total, sizes,next, jumper"
+            :total="total"
+          >
+          </el-pagination>
         </div>
       </div>
     </div>
@@ -126,19 +192,180 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+
 import SearchSelector from "./SearchSelector/SearchSelector";
 import TypeNav from "@comps/TypeNav";
 
 export default {
   name: "Search",
+  data() {
+    return {
+      options: {
+        category1Id: "",
+        category2Id: "",
+        category3Id: "",
+        categoryName: "",
+        keyword: "",
+        props: [],
+        trademark: "",
+        order: "1:desc",
+        pageNo: 1,
+        pageSize: 5,
+      },
+      isAllDown: true,
+      isPriceDown: false,
+    };
+  },
   computed: {
-    ...mapGetters(["goodsList"]),
+    ...mapGetters(["goodsList", "total"]),
   },
   methods: {
-    ...mapActions(["getProductList"]),
+    ...mapActions(["getProductList", "addCart"]),
+    /**
+     * 更新商品列表
+     */
+    updataProductList(pageNo = 1) {
+      const {
+        category1Id,
+        category2Id,
+        category3Id,
+        categoryName,
+      } = this.$route.query;
+      const { searchContent: keyword } = this.$route.params;
+      const options = {
+        ...this.options,
+        category1Id,
+        category2Id,
+        category3Id,
+        categoryName,
+        keyword,
+        pageNo,
+      };
+      this.options = options;
+      this.getProductList(options);
+    },
+    /**
+     * 删除面包屑
+     */
+    delSearchContent() {
+      const { options, $router, $route } = this;
+      options.keyword = "";
+      this.$bus.$emit("clearKeyWord");
+      $router.push({ name: "search", query: $route.query });
+    },
+    /**
+     * 删除三级分类对应的面包屑
+     */
+    delCategoryName() {
+      const { options, $router, $route } = this;
+      options.categoryName = "";
+      $router.push({ name: "search", params: $route.params });
+    },
+    /**
+     * 添加品牌
+     */
+    addTradeMark(trademark) {
+      this.options.trademark = trademark;
+      this.updataProductList();
+    },
+    /**
+     * 删除品牌对应的面包屑
+     */
+    delTradeMark() {
+      this.options.trademark = "";
+      this.updataProductList();
+    },
+    /**
+     * 添加分类
+     */
+    addProp(prop) {
+      this.options.props.push(prop);
+      this.updataProductList();
+    },
+    /**
+     * 删除分类
+     */
+    delProps(index) {
+      this.options.props.splice(index, 1);
+      this.updataProductList();
+    },
+    setOrder(order) {
+      let [orderNum, orderType] = this.options.order.split(":");
+
+      /**
+       * if order === orderNum, it's second click
+       * if order !== orderNum, it's  first click
+       */
+      if (order === orderNum) {
+        // judge order === 1 or order === 2
+        if (order === "1") {
+          this.isAllDown = !this.isAllDown;
+        } else {
+          this.isPriceDown = !this.isPriceDown;
+        }
+        /**
+         * set desc or asc
+         */
+        orderType = orderType === "desc" ? "asc" : "desc";
+      } else {
+        // it's first click
+        if (order === "1") {
+          // comprehensive set sort default
+          orderType = this.isAllDown ? "desc" : "asc";
+        } else {
+          this.isPriceDown = false;
+          orderType = "asc";
+        }
+      }
+      this.options.order = `${order}:${orderType}`;
+      this.updataProductList();
+    },
+    /**
+     * set pagination
+     */
+    handleCurrentChange(pageNo) {
+      this.updataProductList(pageNo);
+    },
+    handleSizeChange(pageSize) {
+      this.updataProductList(pageSize);
+    },
+    /**
+     * 添加购物车
+     */
+    addToCart(goods) {
+      const skuInfo = {
+        skuName: goods.title,
+        skuId: goods.id,
+        skuDefaultImg: goods.defaultImg,
+      };
+      // 添加到购物车
+      this.addCart({ skuId: skuInfo.skuId, skuNum: 1 });
+      // 获取购物车列表
+      // this.getPorductDeatils(skuInfo.skuId);
+      window.sessionStorage.setItem("SKU_INFO", JSON.stringify(skuInfo));
+      const location = {
+        name: "addToCart",
+        query: {
+          skuNum: 1,
+        },
+        meta: {
+          skuId: goods.id,
+        },
+      };
+      this.$router.push(location);
+    },
   },
-  mounted() {
-    this.getProductList({ pageSize: 5 });
+
+  watch: {
+    /**
+     * 监听地址栏变化，重新发请求
+     */
+    $route: {
+      handler() {
+        this.updataProductList();
+      },
+      immediate: true, // 页面一上来就会监视,从无到有,也算变化,所以直接触发函数
+    },
   },
   components: {
     SearchSelector,
@@ -246,14 +473,29 @@ export default {
 
             li {
               float: left;
-              line-height: 18px;
 
               a {
-                display: block;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
                 cursor: pointer;
                 padding: 11px 15px;
                 color: #777;
                 text-decoration: none;
+
+                span {
+                  display: flex;
+                  flex-direction: column;
+
+                  line-height: 8px;
+
+                  i {
+                    font-size: 12px;
+                    &.deactive {
+                      color: rgba(255, 255, 255, 0.5);
+                    }
+                  }
+                }
               }
 
               &.active {

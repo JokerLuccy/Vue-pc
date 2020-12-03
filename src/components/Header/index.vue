@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-12-01 19:26:32
+ * @LastEditTime: 2020-12-02 21:13:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -33,7 +33,10 @@
 
         <div class="header-typeList">
           <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <router-link to="/carshop">
+            <a href="###">我的购物车</a>
+          </router-link>
+
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
@@ -94,7 +97,14 @@ export default {
       if (categoryName) {
         location.query = this.$route.query;
       }
-      $router.push(location);
+      /**
+       * 根据地址栏选择跳转方式,解决回退到主页的问题
+       */
+      if (this.$route.path.includes("/search")) {
+        $router.replace(location);
+      } else {
+        $router.push(location);
+      }
     },
     /**
      * @description：退出登录
@@ -107,6 +117,23 @@ export default {
         this.$router.push("/login");
       }
     },
+  },
+  watch: {
+    /**
+     * 监听地址栏，清空search内容
+     */
+    $route: {
+      handler() {
+        if (this.$route.path === "/") this.searchContent = "";
+      },
+      immediate: true,
+    },
+  },
+  mounted() {
+    /**清空搜索框的文字 */
+    this.$bus.$on("clearKeyWord", () => {
+      this.searchContent = "";
+    });
   },
 };
 </script>

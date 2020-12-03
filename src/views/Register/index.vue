@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:54
- * @LastEditTime: 2020-12-01 21:13:08
+ * @LastEditTime: 2020-12-02 08:39:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Register\index.vue
@@ -82,7 +82,7 @@
         <span class="error-msg">{{ errors.first("协议") }}</span>
       </div>
       <div class="btn">
-        <button @click="getRegister">完成注册</button>
+        <button :disabled="!isAgree" @click="getRegister">完成注册</button>
       </div>
     </div>
     <CopyRight></CopyRight>

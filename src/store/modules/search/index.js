@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-01 16:45:37
- * @LastEditTime: 2020-12-01 17:48:56
+ * @LastEditTime: 2020-12-02 19:58:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\store\modules\search\index.js
@@ -34,6 +34,9 @@ const getters = {
   },
   goodsList(state) {
     return state.productList.goodsList;
+  },
+  total(state) {
+    return state.productList.total;
   },
 };
 const search = {
