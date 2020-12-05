@@ -48,10 +48,7 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li
-                  :class="{ active: options.order.startsWith('1') }"
-                  @click="setOrder('1')"
-                >
+                <li :class="{ active: judgeOrder('1') }" @click="setOrder('1')">
                   <a
                     >综合
                     <i
@@ -72,10 +69,7 @@
                 <li>
                   <a>评价</a>
                 </li>
-                <li
-                  :class="{ active: options.order.startsWith('2') }"
-                  @click="setOrder('2')"
-                >
+                <li :class="{ active: judgeOrder('2') }" @click="setOrder('2')">
                   <a
                     >价格
                     <span>
@@ -83,16 +77,14 @@
                         :class="{
                           iconfont: true,
                           'icon-arrow-up-filling': true,
-                          deactive:
-                            options.order.startsWith('2') && isPriceDown,
+                          deactive: judgeOrder('2') && isPriceDown,
                         }"
                       ></i>
                       <i
                         :class="{
                           iconfont: true,
                           'icon-arrow-down-filling': true,
-                          deactive:
-                            options.order.startsWith('2') && !isPriceDown,
+                          deactive: judgeOrder('2') && !isPriceDown,
                         }"
                       ></i>
                     </span>
@@ -106,9 +98,9 @@
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
+                    <router-link :to="`/detail/${goods.id}`"
                       ><img :src="goods.defaultImg"
-                    /></a>
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -118,11 +110,12 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a
-                      target="_blank"
-                      href="item.html"
-                      title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
-                      >{{ goods.title }}</a
+                    <router-link :to="`/detail/${goods.id}`"
+                      ><a
+                        target="_blank"
+                        title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
+                        >{{ goods.title }}</a
+                      ></router-link
                     >
                   </div>
                   <div class="commit">
@@ -172,18 +165,24 @@
               <div><span>共10页&nbsp;</span></div>
             </div> -->
           <!-- pagination -->
-          <el-pagination
+          <!-- <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="options.pageNo"
             :page-sizes="[5, 10, 15, 20]"
-            :page-size="15"
+            :page-size="options.pageSize"
             :page-count="7"
             background
             layout="prev,pager,total, sizes,next, jumper"
             :total="total"
           >
-          </el-pagination>
+          </el-pagination> -->
+          <Pagination
+            :current-page="options.pageNo"
+            :pager-count="9"
+            :page-size="5"
+            :total="11"
+          ></Pagination>
         </div>
       </div>
     </div>
@@ -192,7 +191,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import Pagination from "@comps/Pagination";
 import SearchSelector from "./SearchSelector/SearchSelector";
 import TypeNav from "@comps/TypeNav";
 
@@ -265,6 +264,7 @@ export default {
      * 添加品牌
      */
     addTradeMark(trademark) {
+      if (this.options.trademark) return;
       this.options.trademark = trademark;
       this.updataProductList();
     },
@@ -279,6 +279,7 @@ export default {
      * 添加分类
      */
     addProp(prop) {
+      if (this.options.props.indexOf(prop) > -1) return;
       this.options.props.push(prop);
       this.updataProductList();
     },
@@ -321,13 +322,20 @@ export default {
       this.updataProductList();
     },
     /**
+     * 判读order开头
+     */
+    judgeOrder(order) {
+      return this.options.order.startsWith(order);
+    },
+    /**
      * set pagination
      */
     handleCurrentChange(pageNo) {
       this.updataProductList(pageNo);
     },
     handleSizeChange(pageSize) {
-      this.updataProductList(pageSize);
+      this.options.pageSize = pageSize;
+      this.updataProductList();
     },
     /**
      * 添加购物车
@@ -370,6 +378,7 @@ export default {
   components: {
     SearchSelector,
     TypeNav,
+    Pagination,
   },
 };
 </script>

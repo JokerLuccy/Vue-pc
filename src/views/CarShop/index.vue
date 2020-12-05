@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-02 20:58:06
- * @LastEditTime: 2020-12-03 17:25:17
+ * @LastEditTime: 2020-12-04 09:48:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\CarShop\index.vue
@@ -57,7 +57,12 @@
       </div>
       <div class="cart-tool">
         <div class="select-all">
-          <input type="checkbox" class="chooseAll" />
+          <input
+            type="checkbox"
+            class="chooseAll"
+            v-model="isCheckAll"
+            @change="check_All"
+          />
           <span>全选</span>
         </div>
         <div class="option">
@@ -90,16 +95,20 @@ import CopyRight from "@comps/Footer/copyRight";
 import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   name: "CarShop",
-
+  data() {
+    return {
+      isCheckAll: false,
+    };
+  },
   computed: {
     ...mapState({
       carShopList: (state) => state.addCart.carShopList,
     }),
-    ...mapGetters(["checkedTotal", "totalPrice"]),
+    ...mapGetters(["checkedTotal", "totalPrice", "checkAllList"]),
   },
 
   methods: {
-    ...mapActions(["getCarShopList", "addCart", "checkChart"]),
+    ...mapActions(["getCarShopList", "addCart", "checkChart", "checkAll"]),
     /**
      * 增加
      */
@@ -121,6 +130,12 @@ export default {
       const is_Checked = isChecked ? 0 : 1;
       await this.checkChart({ skuId, isChecked: is_Checked });
       await this.getCarShopList();
+    },
+    /**
+     * 选中所有
+     */
+    async check_All() {
+      this.checkAll(this.isCheckAll);
     },
   },
   mounted() {
