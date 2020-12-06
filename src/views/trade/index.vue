@@ -7,7 +7,7 @@
         class="address clearFix"
         v-for="userAddress in userAddressList"
         :key="userAddress.id"
-        @click="fn(userAddress, userAddressList)"
+        @click="selected_Address(userAddress, userAddressList)"
       >
         <span
           :class="{
@@ -66,6 +66,7 @@
         <textarea
           placeholder="建议留言前先与商家沟通确认"
           class="remarks-cont"
+          v-model="orderComment"
         ></textarea>
       </div>
       <div class="line"></div>
@@ -118,7 +119,7 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <a class="subBtn" @click="submit_Order">提交订单</a>
     </div>
   </div>
 </template>
@@ -130,6 +131,7 @@ export default {
   data() {
     return {
       selectedAddress: {},
+      orderComment: "",
     };
   },
   computed: {
@@ -141,16 +143,41 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getTradeList"]),
-    fn(val, list) {
+    ...mapActions(["getTradeList", "submitOrder"]),
+    selected_Address(val, list) {
       if (val.isDefault === "1") return;
       list.forEach((item) => (item.isDefault = "0"));
       val.isDefault = "1";
       this.selectedAddress = val;
     },
+    submit_Order() {
+      const tradeNo = this.tradeList.tradeNo;
+      const {
+        consignee,
+        phoneNum: consigneeTel,
+        userAddress: deliveryAddress,
+      } = this.selectedAddress;
+      const { orderComment, detailArrayList: orderDetailList } = this;
+      const data = {
+        tradeNo,
+        consignee,
+        consigneeTel,
+        deliveryAddress,
+        paymentWay: "ONLINE",
+        orderComment,
+        orderDetailList,
+      };
+      this.submitOrder({ tradeNo, data });
+      this.$router.push("/pay");
+    },
   },
   mounted() {
     this.getTradeList();
+    window.addEventListener("load", () => {
+      if (this.$route.path === "/trade") {
+        this.$router.push("/carhop");
+      }
+    });
   },
 };
 </script>

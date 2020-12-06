@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-27 14:13:36
- * @LastEditTime: 2020-12-02 16:17:41
+ * @LastEditTime: 2020-12-06 22:22:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\main.js
@@ -17,7 +17,10 @@ import "./styles/reset.css";
 import "./plugins/element.js";
 import "./mock/mockServer";
 import "./styles/iconfont.css";
+
 Vue.config.productionTip = false;
+
+
 Vue.use(VueAwesomeSwiper);
 
 new Vue({
