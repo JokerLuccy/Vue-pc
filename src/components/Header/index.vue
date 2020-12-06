@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-12-05 08:37:31
+ * @LastEditTime: 2020-12-05 08:41:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -33,7 +33,7 @@
 
         <div class="header-typeList">
           <a href="###">我的订单</a>
-          <router-link to="/carshop"> 我的购物车 </router-link>
+          <router-link to="/carhop"> 我的购物车 </router-link>
 
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>

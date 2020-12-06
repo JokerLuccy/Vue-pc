@@ -1,9 +1,22 @@
 <template>
   <div class="spec-preview" @mousemove="mask_Move" ref="specPreview">
-    <img :src="imgSrc ? imgSrc : skuInfo.skuDefaultImg" />
+    <img
+      :src="
+        imgSrc
+          ? imgSrc
+          : skuInfo.skuImageList[0] && skuInfo.skuImageList[0].imgUrl
+      "
+    />
     <div class="event"></div>
     <div class="big">
-      <img :src="imgSrc ? imgSrc : skuInfo.skuDefaultImg" ref="big" />
+      <img
+        :src="
+          imgSrc
+            ? imgSrc
+            : skuInfo.skuImageList[0] && skuInfo.skuImageList[0].imgUrl
+        "
+        ref="big"
+      />
     </div>
     <div class="mask" ref="mask"></div>
   </div>
@@ -66,7 +79,6 @@ export default {
   },
   mounted() {
     this.$bus.$on("getImg", (imgSrc) => {
-      console.log(imgSrc);
       this.imgSrc = imgSrc;
     });
   },

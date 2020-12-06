@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-02 20:58:06
- * @LastEditTime: 2020-12-04 09:48:53
+ * @LastEditTime: 2020-12-06 12:02:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\CarShop\index.vue
@@ -49,7 +49,7 @@
             <span class="sum">{{ carShop.cartPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a class="sindelet">删除</a>
+            <a class="sindelet" @click="delCart(carShop.skuId)">删除</a>
             <br />
             <a> 移到收藏</a>
           </li>
@@ -66,7 +66,7 @@
           <span>全选</span>
         </div>
         <div class="option">
-          <a>删除选中的商品</a>
+          <a @click="clearSelectCart">删除选中的商品</a>
           <a>移到我的关注</a>
           <a>清除下柜商品</a>
         </div>
@@ -81,7 +81,7 @@
             <i class="summoney">{{ totalPrice }}</i>
           </div>
           <div class="sumbtn">
-            <a class="sum-btn">结算</a>
+            <a class="sum-btn" @click="settlement">结算</a>
           </div>
         </div>
       </div>
@@ -97,18 +97,29 @@ export default {
   name: "CarShop",
   data() {
     return {
-      isCheckAll: false,
+      isCheckAll: true,
     };
   },
   computed: {
     ...mapState({
       carShopList: (state) => state.addCart.carShopList,
     }),
-    ...mapGetters(["checkedTotal", "totalPrice", "checkAllList"]),
+    ...mapGetters(["checkedTotal", "totalPrice"]),
   },
-
+  watch: {
+    carShopList(val) {
+      const res = val.some((item) => item.isChecked !== 0);
+      this.isCheckAll = res;
+    },
+  },
   methods: {
-    ...mapActions(["getCarShopList", "addCart", "checkChart", "checkAll"]),
+    ...mapActions([
+      "getCarShopList",
+      "addCart",
+      "checkChart",
+      "checkAll",
+      "deleteCart",
+    ]),
     /**
      * 增加
      */
@@ -135,7 +146,42 @@ export default {
      * 选中所有
      */
     async check_All() {
-      this.checkAll(this.isCheckAll);
+      const { carShopList, isCheckAll } = this;
+      const isChecked = isCheckAll ? 1 : 0;
+      carShopList.forEach((item) => {
+        item.isChecked = isChecked;
+        this.checkChart({ skuId: item.skuId, isChecked: item.isChecked });
+      });
+    },
+    /**
+     * 删除购物车选中的
+     */
+    clearSelectCart() {
+      const { carShopList, deleteCart } = this;
+
+      carShopList.forEach(async (item) => {
+        if (item.isChecked) {
+          await deleteCart(item.skuId);
+          await this.getCarShopList();
+        }
+      });
+    },
+    /**
+     * 删除单个购物清单
+     */
+    async delCart(skuId) {
+      if (confirm("确定要删除吗")) {
+        await this.deleteCart(skuId);
+        await this.getCarShopList();
+      }
+    },
+    /**
+     * 结算
+     */
+    settlement() {
+      const userInfo = JSON.parse(window.localStorage.getItem("user_info"));
+      console.log(userInfo);
+      userInfo ? this.$router.push("/trade") : this.$router.push("/login");
     },
   },
   mounted() {

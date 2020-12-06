@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-03 10:54:18
- * @LastEditTime: 2020-12-03 14:34:53
+ * @LastEditTime: 2020-12-06 12:00:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\CarShop\addCart\index.vue
@@ -20,8 +20,10 @@
           </div>
           <div class="right-info">
             <p class="title">{{ skuName }}</p>
-            <p class="attr">
-              颜色：WFZ5099IH/5L钛金釜内胆 数量：{{ $route.query.skuNum }}
+            <p class="attr" v-if="Object.keys(skuSelect).length !== 0">
+              选择颜色:{{ skuSelect["选择颜色"] }}/选择版本:{{
+                skuSelect["选择版本"]
+              }}/选择套装:{{ skuSelect["选择套装"] }} 数量：{{ skuNum }}
             </p>
           </div>
         </div>
@@ -42,8 +44,11 @@ export default {
     return {
       skuName: "",
       skuDefaultImg: "",
+      skuNum: 0,
+      skuSelect: {},
     };
   },
+
   methods: {
     ...mapActions(["getPorductDeatils"]),
     /**
@@ -52,11 +57,16 @@ export default {
     goToCart() {
       this.$router.push("/carhop");
     },
+    /**
+     * 操作session中的数据
+     */
   },
   mounted() {
     const skuInfo = JSON.parse(window.sessionStorage.getItem("SKU_INFO"));
     this.skuName = skuInfo.skuName;
     this.skuDefaultImg = skuInfo.skuDefaultImg;
+    this.skuNum = skuInfo.skuNum;
+    this.skuSelect = skuInfo.skuSelect;
   },
 };
 </script>

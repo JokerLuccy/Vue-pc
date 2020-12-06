@@ -1,15 +1,19 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:42:53
- * @LastEditTime: 2020-12-04 09:53:57
+ * @LastEditTime: 2020-12-05 09:04:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\store\modules\addCart\index.js
  */
-import { reqAddToCart, reqCarShopList, reqCheckChart } from "@api/addCart";
+import {
+  reqAddToCart,
+  reqCarShopList,
+  reqCheckChart,
+  reqDeleteCart,
+} from "@api/addCart";
 const state = {
   carShopList: [],
-  checkedAll: false,
 };
 const actions = {
   /**
@@ -36,18 +40,17 @@ const actions = {
     await reqCheckChart(skuId, isChecked);
   },
   /**
-   * 全选
+   * 删除购物车选中的商品
    */
-  checkAll({ commit }, checkedAll) {
-    commit("CHECK_ALL", checkedAll);
+  async deleteCart({ commit }, skuId) {
+    const res = await reqDeleteCart(skuId);
+    console.log(res);
+    console.log(commit);
   },
 };
 const mutations = {
   GET_CARSHOP_LIST(state, res) {
     state.carShopList = res;
-  },
-  CHECK_ALL(state, checkedAll) {
-    state.checkedAll = checkedAll;
   },
 };
 const getters = {
@@ -68,13 +71,6 @@ const getters = {
         return p;
       }
     }, 0);
-  },
-  checkAllList(state) {
-    const isChecked = state.checkAll ? 1 : 0;
-    return state.carShopList.forEach((item) => {
-      item.isChecked = isChecked;
-      console.log(item);
-    });
   },
 };
 const addCart = {

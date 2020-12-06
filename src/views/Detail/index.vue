@@ -76,11 +76,22 @@
             <div class="chooseArea">
               <div class="choosed"></div>
               <dl v-for="spuSaleAttr in spuSaleAttrList" :key="spuSaleAttr.id">
-                <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
+                <dt class="title">
+                  {{ spuSaleAttr.saleAttrName }}
+                </dt>
                 <dd
                   changepirce="0"
+                  :class="{
+                    active: spuSaleAttrValue.isChecked === '1',
+                  }"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
+                  @click="
+                    setSpuSaleAttrValueIndex(
+                      spuSaleAttrValue,
+                      spuSaleAttr.spuSaleAttrValueList
+                    )
+                  "
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -88,16 +99,16 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input
-                  autocomplete="off"
-                  class="itxt"
-                  :value="skuInfo.isSale"
-                />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <el-input-number
+                  class="input-number"
+                  v-model="skuNum"
+                  controls-position="right"
+                  :min="1"
+                  :max="10"
+                ></el-input-number>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="add_To_Cart(skuInfo.id)">加入购物车</a>
               </div>
             </div>
           </div>
@@ -343,11 +354,61 @@ import TypeNav from "@comps/TypeNav";
 
 export default {
   name: "Detail",
+  data() {
+    return {
+      skuNum: 1,
+    };
+  },
   computed: {
     ...mapGetters(["categoryView", "spuSaleAttrList", "skuInfo", "price"]),
   },
   methods: {
-    ...mapActions(["getProductDetail"]),
+    ...mapActions(["getProductDetail", "addToCart"]),
+    /**
+     * @description:商品样式选择
+     * @param {Object} val 单项可选项
+     * @param {Array} list 单项商品列表
+     * @return {*}
+     */
+    setSpuSaleAttrValueIndex(val, list) {
+      if (val.isChecked === "1") return;
+      list.forEach((item) => (item.isChecked = "0"));
+      val.isChecked = "1";
+    },
+
+    /**
+     * 添加购物车
+     */
+    async add_To_Cart(id) {
+      const skuId = id;
+      const skuNum = this.skuNum;
+
+      try {
+        const { spuSaleAttrList } = this;
+        let skuSelect = {};
+        spuSaleAttrList.forEach((item) => {
+          item.spuSaleAttrValueList.forEach((i) => {
+            if (i.isChecked === "1") {
+             
+              skuSelect[i.saleAttrName] = i.saleAttrValueName;
+            }
+          });
+        });
+
+        await this.addToCart({ skuId, skuNum });
+        const sku_Info = {
+          skuName: this.skuInfo.skuName,
+          skuDefaultImg: this.skuInfo.skuDefaultImg,
+          skuNum: skuNum,
+          skuSelect,
+        };
+        window.sessionStorage.setItem("SKU_INFO", JSON.stringify(sku_Info));
+
+        this.$router.push("/addToCart");
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   mounted() {
     const skuId = this.$route.params.id;
@@ -529,9 +590,11 @@ export default {
               position: relative;
               float: left;
               margin-right: 15px;
-
+              .input-number {
+                width: 90px;
+              }
               .itxt {
-                width: 38px;
+                width: 70px;
                 height: 37px;
                 border: 1px solid #ddd;
                 color: #555;
@@ -566,7 +629,7 @@ export default {
 
             .add {
               float: left;
-
+              margin-left: 50px;
               a {
                 background-color: #e1251b;
                 padding: 0 25px;

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 21:19:01
- * @LastEditTime: 2020-12-01 19:25:42
+ * @LastEditTime: 2020-12-05 16:12:03
  * @LastEditors: Please set LastEditors
  * @Description: Login 的 Vuex
  * @FilePath: \vue_reception\src\store\modules\login\index.js
@@ -9,13 +9,13 @@
 import { reqLogin, reqLoginOut } from "@api/user";
 import {
   saveUserInfo,
-  getUserTempId,
+ 
   getUserInfo,
   removeUserInfo,
 } from "@utils/storageUtils ";
 const state = {
   userInfo: getUserInfo(), // 当前登录用户的信息
-  userTempId: getUserTempId(), // 等去前用户的的唯一标识
+ 
 };
 const actions = {
   /**
@@ -49,7 +49,7 @@ const mutations = {
    */
   RECEIVE_USER_INFO(state, userInfo) {
     state.userInfo = userInfo;
-    state.userTempId = getUserTempId();
+    
   },
   /**
    * @description: 退出登录
@@ -59,7 +59,7 @@ const mutations = {
    */
   RESET_USER_INFO(state) {
     state.userInfo = {};
-    // state.userTempId = "";
+   
   },
 };
 

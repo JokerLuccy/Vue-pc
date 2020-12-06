@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 10:41:46
- * @LastEditTime: 2020-12-04 19:05:20
+ * @LastEditTime: 2020-12-05 09:01:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\api\addCart.js
@@ -16,3 +16,6 @@ export const reqCarShopList = () => ajax.get("/cart/cartList");
 // 切换商品选中状态
 export const reqCheckChart = (skuId, isChecked) =>
   ajax.get(`/cart/checkCart/${skuId}/${isChecked}`);
+// 删除购物车选中的商品
+export const reqDeleteCart = (skuId) =>
+  ajax.delete(`/cart/deleteCart/${skuId}`);

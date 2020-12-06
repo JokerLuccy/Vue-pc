@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-28 14:58:14
- * @LastEditTime: 2020-12-01 19:59:48
+ * @LastEditTime: 2020-12-05 16:13:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\utils\request.js
@@ -17,6 +17,8 @@ import NProgress from "nprogress";
 import { Message } from "element-ui";
 import "nprogress/nprogress.css";
 import store from "@store/index";
+import { getUserTempId } from "./storageUtils ";
+getUserTempId();
 const instance = axios.create({
   baseURL: "/api",
 });

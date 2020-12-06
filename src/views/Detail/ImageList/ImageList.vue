@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-04 18:52:26
- * @LastEditTime: 2020-12-05 08:35:50
+ * @LastEditTime: 2020-12-05 11:36:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Detail\ImageList\ImageList.vue
@@ -11,11 +11,15 @@
     <div class="swiper-wrapper">
       <div
         class="swiper-slide"
-        @click="getImgMsg"
-        v-for="skuImg in skuImageList"
+        v-for="(skuImg, index) in skuImageList"
         :key="skuImg.id"
       >
-        <img :src="skuImg.imgUrl" :alt="skuImg.imgName" />
+        <img
+          :src="skuImg.imgUrl"
+          :alt="skuImg.imgName"
+          :class="{ active: imgIndex === index }"
+          @click="getImgMsg(index)"
+        />
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -30,7 +34,11 @@ import { mapGetters } from "vuex";
 Swiper.use([Navigation]);
 export default {
   name: "ImageList",
-
+  data() {
+    return {
+      imgIndex: 0,
+    };
+  },
   computed: {
     ...mapGetters(["skuImageList"]),
   },
@@ -53,7 +61,8 @@ export default {
         },
       });
     },
-    getImgMsg() {
+    getImgMsg(index) {
+      this.imgIndex = index;
       this.$bus.$emit("getImg", event.target.src);
     },
   },

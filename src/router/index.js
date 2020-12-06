@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-27 15:45:38
- * @LastEditTime: 2020-12-04 19:06:06
+ * @LastEditTime: 2020-12-05 21:02:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\router\index.js
@@ -15,6 +15,7 @@ import Search from "../views/Search";
 import CarShop from "@views/CarShop";
 import AddToCart from "@views/CarShop/addCart";
 import Detail from "@views/Detail";
+import Trade from "@views/trade";
 const push = VueRouter.prototype.push;
 VueRouter.prototype.push = function(location, onComplete, onAbort) {
   if (onComplete && onAbort) {
@@ -66,6 +67,10 @@ const router = new VueRouter({
     {
       path: "/detail/:id",
       component: Detail,
+    },
+    {
+      path: "/trade",
+      component: Trade,
     },
   ],
   scrollBehavior() {

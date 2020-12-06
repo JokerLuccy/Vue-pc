@@ -345,22 +345,23 @@ export default {
         skuName: goods.title,
         skuId: goods.id,
         skuDefaultImg: goods.defaultImg,
+        skuNum: 1,
+        skuSelect: {
+          选择套装: "无",
+          选择版本: "无",
+          选择颜色: "无",
+        },
       };
       // 添加到购物车
-      this.addCart({ skuId: skuInfo.skuId, skuNum: 1 });
+      this.addCart({
+        skuId: skuInfo.skuId,
+        skuNum: 1,
+      });
       // 获取购物车列表
       // this.getPorductDeatils(skuInfo.skuId);
       window.sessionStorage.setItem("SKU_INFO", JSON.stringify(skuInfo));
-      const location = {
-        name: "addToCart",
-        query: {
-          skuNum: 1,
-        },
-        meta: {
-          skuId: goods.id,
-        },
-      };
-      this.$router.push(location);
+
+      this.$router.push("/addToCart");
     },
   },
 
