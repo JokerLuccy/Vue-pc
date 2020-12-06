@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-02 20:58:06
- * @LastEditTime: 2020-12-06 12:02:12
+ * @LastEditTime: 2020-12-06 15:23:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\CarShop\index.vue
@@ -108,7 +108,7 @@ export default {
   },
   watch: {
     carShopList(val) {
-      const res = val.some((item) => item.isChecked !== 0);
+      const res = val.every((item) => item.isChecked !== 0);
       this.isCheckAll = res;
     },
   },
@@ -163,6 +163,7 @@ export default {
         if (item.isChecked) {
           await deleteCart(item.skuId);
           await this.getCarShopList();
+          if (!this.carShopList.length) this.isCheckAll = false;
         }
       });
     },
@@ -173,6 +174,7 @@ export default {
       if (confirm("确定要删除吗")) {
         await this.deleteCart(skuId);
         await this.getCarShopList();
+        if (!this.carShopList.length) this.isCheckAll = false;
       }
     },
     /**
@@ -180,7 +182,10 @@ export default {
      */
     settlement() {
       const userInfo = JSON.parse(window.localStorage.getItem("user_info"));
-      console.log(userInfo);
+      if (!this.carShopList.length) {
+        confirm("请添加商品再结算");
+        return;
+      }
       userInfo ? this.$router.push("/trade") : this.$router.push("/login");
     },
   },

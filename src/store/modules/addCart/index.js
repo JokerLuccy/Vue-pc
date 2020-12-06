@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:42:53
- * @LastEditTime: 2020-12-05 09:04:38
+ * @LastEditTime: 2020-12-06 15:13:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\store\modules\addCart\index.js
@@ -43,8 +43,7 @@ const actions = {
    * 删除购物车选中的商品
    */
   async deleteCart({ commit }, skuId) {
-    const res = await reqDeleteCart(skuId);
-    console.log(res);
+    await reqDeleteCart(skuId);
     console.log(commit);
   },
 };
