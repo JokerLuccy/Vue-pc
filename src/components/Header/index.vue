@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:45:15
- * @LastEditTime: 2020-12-05 08:41:41
+ * @LastEditTime: 2020-12-07 15:25:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\components\Header\index.vue
@@ -109,9 +109,9 @@ export default {
      * @param {*}
      * @return {*}
      */
-    loginOut() {
+    async loginOut() {
       if (confirm("确定要退出？")) {
-        this.userLoginOut();
+        await this.userLoginOut();
         this.$router.push("/login");
       }
     },

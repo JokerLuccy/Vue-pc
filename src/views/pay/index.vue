@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-06 19:43:48
- * @LastEditTime: 2020-12-06 23:56:08
+ * @LastEditTime: 2020-12-07 15:57:55
  * @LastEditors: Please set LastEditors
  * @Description: 支付界面
  * @FilePath: \vue_reception\src\views\pay\index.vue
@@ -17,7 +17,7 @@
         <div class="paymark">
           <span class="fl">
             请您在提交订单
-            <em class="orange time">4小时</em>
+            <em class="orange time">{{ hour }}: {{ minutes }}:{{ second }}</em>
             之内完成支付，超时订单会自动取消。订单号：
             <em>{{ orderId }}</em>
           </span>
@@ -125,12 +125,12 @@
             <img :src="url ? url : ''" alt="" />
             <span slot="footer" class="dialog-footer">
               <el-button @click="closeDialog">支付中遇到了问题</el-button>
-              <el-button type="primary" @click="dialogVisible = false"
+              <el-button type="primary" @click="goPaySuccess"
                 >已成功支付</el-button
               >
             </span>
           </el-dialog>
-          <el-button :plain="true" @click="dialog_Visible()" class="btn"
+          <el-button :plain="true" @click="dialog_Visible" class="btn"
             >立即支付</el-button
           >
         </div>
@@ -160,6 +160,9 @@ export default {
       dialogVisible: false,
       isAlertShow: false,
       url: "",
+      second: 59,
+      minutes: 59,
+      hour: 2,
     };
   },
   computed: {
@@ -174,9 +177,10 @@ export default {
     // 发送请求,获取二维码
     async dialog_Visible() {
       this.dialogVisible = true;
-      const { orderId, codeUrl } = this;
-      await this.getCreateNative(orderId);
-      const res = await QRCode.toDataURL(codeUrl);
+      const { orderId } = this;
+      // mapState映射的数据可能是异步更新,不能立即拿到
+      const result = await this.getCreateNative(orderId);
+      const res = await QRCode.toDataURL(result.codeUrl);
       this.url = res;
     },
     closeDialog() {
@@ -187,6 +191,10 @@ export default {
         type: "warning",
       });
     },
+    goPaySuccess() {
+      this.dialogVisible = false;
+      this.$router.push("/paysuccess");
+    },
   },
   mounted() {
     window.addEventListener("load", () => {
@@ -194,6 +202,21 @@ export default {
         this.$router.push("/carhop");
       }
     });
+
+    setInterval(() => {
+      this.second--;
+      if (this.second < 1) {
+        this.second = 59;
+        this.minutes--;
+        if (this.minutes < 1) {
+          this.minutes = 59;
+          this.hour--;
+          if (!this.hour) {
+            return;
+          }
+        }
+      }
+    }, 1000);
   },
 };
 </script>

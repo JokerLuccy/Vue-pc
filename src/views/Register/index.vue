@@ -1,211 +1,274 @@
-<!--
- * @Author: your name
- * @Date: 2020-11-27 15:56:54
- * @LastEditTime: 2020-12-02 08:39:31
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \vue_reception\src\views\Register\index.vue
--->
 <template>
   <div class="register-container">
+    <!-- 注册内容 -->
     <div class="register">
       <h3>
         注册新用户
         <span class="go"
-          >我有账号,去
-          <a href="/#/login">登录</a>
+          >我有账号，去 <a @click="$router.push('/login')">登陆</a>
         </span>
       </h3>
       <div class="content">
-        <label>手机号</label>
-        <input
-          type="text"
-          placeholder="请输入手机号"
-          name="phone"
-          v-model="phone"
-          v-validate="{ required: true, regex: /^1\d{10}$/ }"
-          :class="{ invalid: errors.has('phone') }"
-        />
-        <span class="error-msg">{{ errors.first("phone") }}</span>
+        <label>手机号:</label>
+        <ValidationProvider v-slot="{ errors }" rules="required|phone">
+          <input
+            type="text"
+            placeholder="请输入你的手机号"
+            v-model="user.phone"
+          />
+          <span class="error-msg">{{ errors[0] }}</span>
+        </ValidationProvider>
       </div>
       <div class="content">
-        <label>验证码</label>
-        <input
-          type="text"
-          placeholder="请输入验证码"
-          name="code"
-          v-model="code"
-          v-validate="{ required: true, regex: /^\d{4}$/ }"
-          :class="{ invalid: errors.has('code') }"
-        />
-        <img
-          src="/api/user/passport/code"
-          alt="code"
-          @click="getCode"
-          ref="code"
-        />
-        <span class="error-msg">{{ errors.first("code") }}</span>
+        <label>验证码:</label>
+        <ValidationProvider v-slot="{ errors }" rules="required|code">
+          <input type="text" placeholder="请输入验证码" v-model="user.code" />
+          <img
+            ref="code"
+            src="http://182.92.128.115/api/user/passport/code"
+            alt="code"
+            @click="refresh"
+          />
+          <span class="error-msg">{{ errors[0] }}</span>
+        </ValidationProvider>
       </div>
       <div class="content">
-        <label>登录密码</label>
+        <label>登录密码:</label>
+        <ValidationProvider v-slot="{ errors }" rules="required|password">
+          <input
+            type="password"
+            placeholder="请输入你的登录密码"
+            v-model="user.password"
+          />
+          <span class="error-msg">{{ errors[0] }}</span>
+        </ValidationProvider>
+      </div>
+      <div class="content">
+        <label>确认密码:</label>
         <input
           type="password"
-          placeholder="请输入密码"
-          name="password"
-          v-model="password"
-          v-validate="{ required: true, regex: /^\d{6}$/ }"
-          :class="{ invalid: errors.has('password') }"
+          placeholder="请输入确认密码"
+          v-model="user.configPwd"
         />
-        <span class="error-msg">{{ errors.first("password") }}</span>
-      </div>
-      <div class="content">
-        <label>确认密码</label>
-        <input
-          type="password"
-          placeholder="请再次输入确认你密码"
-          name="confirPwd"
-          v-model="confirPwd"
-          v-validate="{ required: true, is: password }"
-          :class="{ invalid: errors.has('confirPwd') }"
-        />
-        <span class="error-msg">{{ errors.first("confirPwd") }}</span>
+        <span class="error-msg"></span>
       </div>
       <div class="controls">
-        <input
-          type="checkbox"
-          name="协议"
-          v-model="isAgree"
-          v-validate="{ agree: true }"
-          :class="{ invalid: errors.has('协议') }"
-        />
+        <input name="m1" type="checkbox" v-model="user.isAgree" />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">{{ errors.first("协议") }}</span>
+        <span class="error-msg"></span>
       </div>
       <div class="btn">
-        <button :disabled="!isAgree" @click="getRegister">完成注册</button>
+        <button @click="register">完成注册</button>
       </div>
     </div>
-    <CopyRight></CopyRight>
+
+    <!-- 底部 -->
+    <div class="copyright">
+      <ul>
+        <li>关于我们</li>
+        <li>联系我们</li>
+        <li>联系客服</li>
+        <li>商家入驻</li>
+        <li>营销中心</li>
+        <li>手机尚品汇</li>
+        <li>销售联盟</li>
+        <li>尚品汇社区</li>
+      </ul>
+      <div class="address">地址：北京市昌平区宏福科技园综合楼6层</div>
+      <div class="beian">京ICP备19006430号</div>
+    </div>
   </div>
 </template>
 
 <script>
+import { ValidationProvider, extend } from "vee-validate";
+import { required } from "vee-validate/dist/rules";
 import { reqRegister } from "@api/register";
-import CopyRight from "../../components/Footer/copyRight";
-
+extend("required", {
+  ...required,
+  message: "必填",
+});
+extend("phone", {
+  validate(val) {
+    return /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/.test(
+      val
+    );
+  },
+  message: "手机号不符合规范",
+});
+extend("code", {
+  validate(val) {
+    return /^\d{4}$/.test(val);
+  },
+  message: "输入不正确",
+});
+extend("password", {
+  validate(val) {
+    return /^\d{}$/.test(val);
+  },
+  message: "6位纯数字",
+});
 export default {
   name: "Register",
   data() {
     return {
-      phone: "",
-      code: "",
-      password: "",
-      confirPwd: "",
-      isAgree: false,
+      user: {
+        phone: "",
+        password: "",
+        configPwd: "",
+        code: "",
+        isAgree: false,
+        isRegister: false,
+      },
     };
   },
   methods: {
-    getCode() {
-      this.$refs.code.src = "/api/user/passport/code";
+    refresh() {
+      event.target.src = "http://182.92.128.115/api/user/passport/code";
     },
-    async getRegister() {
-      const { phone, password, code, $router } = this;
-      const data = {
-        phone,
-        password,
-        code,
-      };
-      await reqRegister(data);
-      $router.push("/login");
+    async register() {
+      try {
+        if (this.isRegister) return;
+        const { phone, password, configPwd, code, isAgree } = this.user;
+        if (!isAgree) {
+          this.$message("请同意协议");
+          return;
+        }
+        if (password !== configPwd) {
+          this.$message("两次密码不一致");
+          return;
+        }
+        const data = {
+          phone,
+          password,
+          code,
+        };
+        await reqRegister(data);
+        this.isRegister = true;
+        this.$router.push("/login");
+      } catch (error) {
+        this.isRegister = false;
+      }
     },
   },
   components: {
-    CopyRight,
+    ValidationProvider,
   },
 };
 </script>
 
 <style lang="less" scoped>
-.register {
-  width: 1200px;
-  height: 445px;
-  border: 1px solid #dfdfdf;
-  margin: 0 auto;
-  h3 {
-    background: #ececec;
-    margin: 0;
-    padding: 6px 15px;
-    color: #333;
-    border-bottom: 1px solid #dfdfdf;
-    font-size: 20.04px;
-    line-height: 30.06px;
-    .go {
-      font-size: 14px;
-      float: right;
-      a {
-        color: #e1251b;
+.register-container {
+  .register {
+    width: 1200px;
+    height: 445px;
+    border: 1px solid rgb(223, 223, 223);
+    margin: 0 auto;
+
+    h3 {
+      background: #ececec;
+      margin: 0;
+      padding: 6px 15px;
+      color: #333;
+      border-bottom: 1px solid #dfdfdf;
+      font-size: 20.04px;
+      line-height: 30.06px;
+
+      span {
+        font-size: 14px;
+        float: right;
+
+        a {
+          color: #e1251b;
+        }
+      }
+    }
+
+    div:nth-of-type(1) {
+      margin-top: 40px;
+    }
+
+    .content {
+      padding-left: 390px;
+      margin-bottom: 18px;
+      position: relative;
+
+      label {
+        font-size: 14px;
+        width: 96px;
+        text-align: right;
+        display: inline-block;
+      }
+
+      input {
+        width: 270px;
+        height: 38px;
+        padding-left: 8px;
+        box-sizing: border-box;
+        margin-left: 5px;
+        outline: none;
+        border: 1px solid #999;
+      }
+
+      img {
+        vertical-align: sub;
+      }
+
+      .error-msg {
+        position: absolute;
+        top: 100%;
+        left: 495px;
+        color: red;
+      }
+    }
+
+    .controls {
+      text-align: center;
+      position: relative;
+
+      input {
+        vertical-align: middle;
+      }
+
+      .error-msg {
+        position: absolute;
+        top: 100%;
+        left: 495px;
+        color: red;
+      }
+    }
+
+    .btn {
+      text-align: center;
+      line-height: 36px;
+      margin: 17px 0 0 55px;
+
+      button {
+        outline: none;
+        width: 270px;
+        height: 36px;
+        background: #e1251b;
+        color: #fff !important;
+        display: inline-block;
+        font-size: 16px;
       }
     }
   }
-}
-div:nth-of-type(1) {
-  margin-top: 40px;
-}
-.content {
-  padding-left: 390px;
-  margin-bottom: 18px;
-  position: relative;
-  img {
-    position: relative;
-    top: 6px;
-  }
-  label {
-    font-size: 14px;
-    width: 96px;
-    text-align: right;
-    display: inline-block;
-  }
-  input {
-    width: 270px;
-    height: 38px;
-    padding-left: 8px;
-    box-sizing: border-box;
-    margin-left: 5px;
-    outline: none;
-    border: 1px solid #999;
-  }
-  span {
-    position: absolute;
-    top: 100%;
-    left: 495px;
-    color: red;
-  }
-}
-.controls {
-  text-align: center;
-  position: relative;
-  input {
-    vertical-align: middle;
-  }
-  .error-msg {
-    position: absolute;
-    top: 100%;
-    left: 495px;
-    color: red;
-  }
-}
-.btn {
-  text-align: center;
-  line-height: 36px;
-  margin: 17px 0 0 55px;
-  button {
-    outline: none;
-    width: 270px;
-    height: 36px;
-    background: #e1251b;
-    color: #fff !important;
-    display: inline-block;
-    font-size: 16px;
+
+  .copyright {
+    width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 24px;
+
+    ul {
+      li {
+        display: inline-block;
+        border-right: 1px solid #e4e4e4;
+        padding: 0 20px;
+        margin: 15px 0;
+      }
+    }
   }
 }
 </style>

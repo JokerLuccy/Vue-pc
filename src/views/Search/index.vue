@@ -361,7 +361,7 @@ export default {
       // this.getPorductDeatils(skuInfo.skuId);
       window.sessionStorage.setItem("SKU_INFO", JSON.stringify(skuInfo));
 
-      this.$router.push("/addToCart");
+      this.$router.push(`/addToCart/${skuInfo.skuId}`);
     },
   },
 

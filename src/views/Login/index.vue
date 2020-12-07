@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-27 15:56:49
- * @LastEditTime: 2020-11-30 23:37:09
+ * @LastEditTime: 2020-12-07 15:21:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\Login\index.vue
@@ -35,7 +35,7 @@
               </div>
               <div class="setting">
                 <label class="checkBox">
-                  <input type="checkbox" name="m1" />
+                  <input type="checkbox" name="m1" v-model="isAutoLogin" />
                   自动登录
                 </label>
                 <span class="forget"> 忘记密码? </span>
@@ -57,7 +57,7 @@
 
 <script>
 import CopyRight from "@comps/Footer/copyRight";
-
+import { getUserInfo } from "@utils/storageUtils ";
 import { mapActions } from "vuex";
 export default {
   name: "Login",
@@ -65,6 +65,8 @@ export default {
     return {
       phone: "",
       password: "",
+      isAutoLogin: false,
+      isLogin: false,
     };
   },
 
@@ -75,14 +77,26 @@ export default {
      * @return {*}
      */
     ...mapActions(["userLogin"]),
-    login() {
-      const data = {
-        phone: this.phone,
-        password: this.password,
-      };
-      this.userLogin(data);
-      this.$router.push("/");
+    async login() {
+      try {
+        if (this.isLogin) return;
+        const data = {
+          phone: this.phone,
+          password: this.password,
+        };
+        await this.userLogin(data);
+        this.isLogin = true;
+        this.$router.replace("/");
+      } catch (error) {
+        this.isLogin = false;
+      }
     },
+  },
+  created() {
+    const userInfo = getUserInfo();
+    if (userInfo.token) {
+      this.$router.replace("/");
+    }
   },
   components: {
     CopyRight,

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-06 12:35:21
- * @LastEditTime: 2020-12-06 22:45:19
+ * @LastEditTime: 2020-12-07 08:41:46
  * @LastEditors: Please set LastEditors
  * @Description: 结算界面
  * @FilePath: \vue_reception\src\store\modules\trade\index.js
@@ -27,6 +27,7 @@ const actions = {
   async getCreateNative({ commit }, orderId) {
     const res = await reqCreateNative(orderId);
     commit("GET_CREATE_NATIVE", res);
+    return res
   },
 };
 const mutations = {

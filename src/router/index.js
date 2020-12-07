@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-27 15:45:38
- * @LastEditTime: 2020-12-06 19:44:50
+ * @LastEditTime: 2020-12-07 21:23:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\router\index.js
@@ -17,6 +17,10 @@ import AddToCart from "@views/CarShop/addCart";
 import Detail from "@views/Detail";
 import Trade from "@views/trade";
 import Pay from "@views/pay";
+import PaySuccess from "@views/pay/paysuccess";
+import Center from "@views/Center";
+import orderCont from "@views/Center/orderCont";
+import Group from "@views/Center/group";
 const push = VueRouter.prototype.push;
 VueRouter.prototype.push = function(location, onComplete, onAbort) {
   if (onComplete && onAbort) {
@@ -62,7 +66,7 @@ const router = new VueRouter({
     },
     {
       name: "addToCart",
-      path: "/addToCart",
+      path: "/addToCart/:skuId?",
       component: AddToCart,
     },
     {
@@ -76,6 +80,28 @@ const router = new VueRouter({
     {
       path: "/pay",
       component: Pay,
+    },
+    {
+      path: "/paysuccess",
+      component: PaySuccess,
+    },
+    {
+      path: "/center",
+      component: Center,
+      children: [
+        {
+          path: "/center/myorder",
+          component: orderCont,
+        },
+        {
+          path: "/center/group",
+          component: Group,
+        },
+        {
+          path: "",
+          redirect: "/center/myorder",
+        },
+      ],
     },
   ],
   scrollBehavior() {

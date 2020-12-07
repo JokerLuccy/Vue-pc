@@ -1,14 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-11-27 14:13:36
- * @LastEditTime: 2020-12-06 22:22:47
+ * @LastEditTime: 2020-12-07 11:40:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\main.js
  */
 import Vue from "vue";
 import VueAwesomeSwiper from "vue-awesome-swiper";
-import "@utils/validate";
 
 import App from "./App.vue";
 import router from "./router";
@@ -19,7 +18,6 @@ import "./mock/mockServer";
 import "./styles/iconfont.css";
 
 Vue.config.productionTip = false;
-
 
 Vue.use(VueAwesomeSwiper);
 

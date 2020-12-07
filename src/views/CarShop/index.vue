@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-02 20:58:06
- * @LastEditTime: 2020-12-06 15:23:17
+ * @LastEditTime: 2020-12-07 15:45:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue_reception\src\views\CarShop\index.vue
@@ -36,20 +36,34 @@
             <span class="price">{{ carShop.skuPrice }}</span>
           </li>
           <li class="cart-list-con5">
-            <a class="mins" @click="mins(carShop.skuId)">-</a>
+            <button
+              class="mins"
+              @click="mins(carShop.skuId)"
+              :disabled="carShop.skuNum === 1"
+            >
+              -
+            </button>
             <input
               type="text"
               class="itxt"
               autocomplete="off"
               :value="carShop.skuNum"
+              @blur="inputSkuNum(carShop.skuId, carShop.skuNum)"
+              @input="formatNum"
             />
-            <a class="plus" @click="plus(carShop.skuId)">+</a>
+            <button
+              class="plus"
+              @click="plus(carShop.skuId)"
+              :disabled="carShop.skuNum === 10"
+            >
+              +
+            </button>
           </li>
           <li class="cart-list-con6">
-            <span class="sum">{{ carShop.cartPrice }}</span>
+            <span class="sum">{{ carShop.cartPrice * carShop.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
-            <a class="sindelet" @click="delCart(carShop.skuId)">删除</a>
+            <a class="sindelet" @click="delCart(carShop.skuId)"> 删除 </a>
             <br />
             <a> 移到收藏</a>
           </li>
@@ -188,6 +202,24 @@ export default {
       }
       userInfo ? this.$router.push("/trade") : this.$router.push("/login");
     },
+    /**
+     * 手动输入
+     */
+    async inputSkuNum(skuId, skuNum) {
+      console.log(skuId, skuNum, event.target.value);
+      if (skuNum === event.target.value) return;
+      await this.addCart({ skuId, skuNum: event.target.value - skuNum });
+      await this.getCarShopList();
+    },
+    formatNum() {
+      let skuNum = +event.target.value.replace(/\D+/g, "");
+      if (skuNum < 1) {
+        skuNum = 1;
+      } else if (skuNum > 10) {
+        skuNum = 10;
+      }
+      event.target.value = skuNum;
+    },
   },
   mounted() {
     // 获取购物车列表
@@ -274,7 +306,7 @@ h4 {
         text-decoration: none;
       }
       .mins {
-        border-right: 0;
+        border: none;
         color: #666;
         width: 6px;
         text-align: center;
@@ -282,7 +314,7 @@ h4 {
         height: 33px;
       }
       .plus {
-        border-left: 0;
+        border: none;
         height: 33px;
 
         color: #666;
